@@ -1,0 +1,33 @@
+{
+  "name": "genshin-promocodes",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "dev": "nodemon --config ./nodemon.json"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saionaro/genshin-promocodes.git"
+  },
+  "keywords": [
+    "genshin",
+    "channel",
+    "promocodes"
+  ],
+  "author": "Saionaro <shibakow@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Saionaro/genshin-promocodes/issues"
+  },
+  "homepage": "https://github.com/Saionaro/genshin-promocodes#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.20",
+    "puppeteer": "^19.7.1"
+  },
+  "engines": {
+    "node": "^16.13.2"
+  }
+}
