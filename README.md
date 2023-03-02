@@ -1,5 +1,5 @@
-# genshin-promocodes
-
+# Genshin Promocodes
+---
 ## Development
 
 Run a developer server locally:
