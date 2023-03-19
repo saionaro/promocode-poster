@@ -6,6 +6,7 @@ class PromoGrabber {
   }
   async init() {
     this.browser = await puppeteer.launch();
+    return this;
   }
   async destroy() {
     await this.browser.close();

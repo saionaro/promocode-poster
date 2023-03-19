@@ -105,3 +105,4 @@ dist
 
 # Secrets
 .env
+data
