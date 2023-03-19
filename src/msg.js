@@ -4,7 +4,6 @@ import { logger } from "./log.js";
 
 const { TELEGRAM_BOT_KEY, TELEGRAM_CHANNEL_ID, NODE_ENV } = process.env;
 const REDEEM_URL = "https://genshin.hoyoverse.com/en/gift";
-
 const SIGNATURE = `\n--\n[How to redeem a code](${REDEEM_URL})`;
 
 export async function postMessage(text) {

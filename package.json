@@ -27,6 +27,7 @@
     "dotenv": "^16.0.3",
     "nanodelay": "^2.0.2",
     "pino": "^8.11.0",
+    "pretty-bytes": "^6.1.0",
     "puppeteer": "^19.7.1"
   },
   "engines": {
