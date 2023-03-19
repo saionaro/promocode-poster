@@ -82,6 +82,7 @@ export class DB {
   }
   async terminateWorker() {
     const new_content = this.#activeWorker.getSnapshot();
+    new_content.updateTs = Date.now();
     await this.#saveContent(new_content);
     this.#activeWorker = null;
   }
@@ -94,7 +95,7 @@ export class DB {
       await fs.writeFile(this.#dbPath, JSON.stringify(data));
       return true;
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       return false;
     }
   }

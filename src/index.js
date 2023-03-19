@@ -9,7 +9,9 @@ const { DB_DIR } = process.env;
 const formatMessage = (promocode) => {
   let res = `\`${promocode.code.toUpperCase()}\``;
   res += "\n";
-  res += `Content: ${promocode.description}`;
+  res += `${promocode.description}`;
+  res += "\n";
+  res += `[source](${promocode.source})`;
   res += "\n";
   return res;
 };
