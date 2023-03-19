@@ -12,3 +12,9 @@ export function parseJson(maybeJson) {
     logger.error(e.message);
   }
 }
+
+export function sanitize(val) {
+  let res = val.replace(/\(new\!\)/gi, "").replace(/\s+/g, " ");
+  res = res.trim();
+  return res;
+}

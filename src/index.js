@@ -1,59 +1,10 @@
 import "./config.js";
-import { sources } from "./sources.js";
-import { postMessage } from "./msg.js";
+import { postCodes } from "./msg.js";
 import { DB } from "./db.js";
 import { logger } from "./log.js";
+import { searchCodes } from "./finder.js";
 
 const { DB_DIR } = process.env;
-
-const formatMessage = (promocode) => {
-  let res = `\`${promocode.code.toUpperCase()}\``;
-  res += "\n";
-  res += `${promocode.description}`;
-  res += "\n";
-  res += `[source](${promocode.source})`;
-  res += "\n";
-  return res;
-};
-
-async function postCodes(codes) {
-  let message = "";
-
-  for (const code of codes) {
-    message += `\n${formatMessage(code)}`;
-  }
-
-  await postMessage(message);
-}
-
-async function searchCodes(db) {
-  logger.info("Start codes search");
-  const foundCodes = [];
-  const worker = await db.createWorker();
-
-  for (const SourceClass of sources) {
-    const source = await new SourceClass().init();
-    const codes = await source.getCodes();
-    await source.destroy();
-
-    for (const code of codes) {
-      if (!worker.has(code.code)) {
-        worker.add(code.code, code.description);
-        foundCodes.push(code);
-      }
-    }
-  }
-
-  await db.terminateWorker();
-
-  if (foundCodes.length) {
-    logger.info(`Found new codes: ${foundCodes.length}`);
-  } else {
-    logger.info("No new codes found");
-  }
-
-  return foundCodes;
-}
 
 async function run() {
   logger.info("Started");

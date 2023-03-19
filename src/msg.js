@@ -13,8 +13,9 @@ export async function postMessage(text) {
   form.append("chat_id", TELEGRAM_CHANNEL_ID);
   form.append("text", `${text}${SIGNATURE}`);
   form.append("parse_mode", "markdown");
+  form.append("disable_web_page_preview", "true");
   try {
-    const res = await axios.post(
+    await axios.post(
       `https://api.telegram.org/bot${TELEGRAM_BOT_KEY}/sendMessage`,
       form
     );
@@ -23,4 +24,22 @@ export async function postMessage(text) {
     logger.error("Message is NOT sent");
     logger.error(e.response.data.description);
   }
+}
+
+const formatMessage = (promocode) => {
+  let res = `\`${promocode.code.toUpperCase()}\``;
+  res += "\n";
+  res += `${promocode.description}`;
+  res += "\n";
+  res += `[source](${promocode.source})`;
+  res += "\n";
+  return res;
+};
+
+export async function postCodes(codes) {
+  let message = "";
+  for (const code of codes) {
+    message += `\n${formatMessage(code)}`;
+  }
+  await postMessage(message);
 }
