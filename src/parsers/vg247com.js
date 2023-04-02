@@ -22,7 +22,7 @@ export default class Parser extends BaseParser {
   async getCodes() {
     const page = await this.getPage();
     const codesUlSelector = ["#codes + ul", "#livestream + ul"].join(", ");
-    await page.waitForSelector("article_body_content");
+    await page.waitForSelector(".article_body_content");
     const received = await page.evaluate((selector) => {
       const lists = document.querySelectorAll(selector);
       const items = [];

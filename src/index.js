@@ -4,10 +4,12 @@ import { DB } from "./db.js";
 import { logger } from "./log.js";
 import { searchCodes } from "./finder.js";
 
-const { DB_DIR } = process.env;
+const { DB_DIR, NODE_ENV, TELEGRAM_CHANNEL_ID } = process.env;
 
 async function run() {
   logger.info("Started");
+  logger.info(`NODE_ENV: ${NODE_ENV}`);
+  logger.info(`TELEGRAM_CHANNEL_ID: ${TELEGRAM_CHANNEL_ID}`);
   const db = new DB(DB_DIR);
   await db.init();
 
