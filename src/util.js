@@ -1,3 +1,5 @@
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 import { logger } from "./log.js";
 
 export function parseJson(maybeJson) {
@@ -17,4 +19,9 @@ export function sanitize(val) {
   let res = val.replace(/\(new\!\)/gi, "").replace(/\s+/g, " ");
   res = res.trim();
   return res;
+}
+
+export function getDirname(fileUrl) {
+  const __filename = fileURLToPath(fileUrl);
+  return dirname(__filename);
 }
