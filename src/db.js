@@ -1,5 +1,6 @@
 import fs from "fs/promises";
-import { resolve, join } from "path";
+import { resolve, join, isAbsolute } from "path";
+import { getDirname } from "./util.js";
 import { logger } from "./log.js";
 
 const DB_NAME = "db.json";
@@ -65,7 +66,12 @@ export class DB {
   #dbPath;
   #activeWorker = null;
   constructor(raw_path) {
-    this.#dbDirPath = resolve(raw_path);
+    let path = raw_path;
+    if (!isAbsolute(raw_path)) {
+      const dirname = getDirname(import.meta.url);
+      path = join(dirname, "..", raw_path);
+    }
+    this.#dbDirPath = resolve(path);
     this.#dbPath = join(this.#dbDirPath, DB_NAME);
   }
 
