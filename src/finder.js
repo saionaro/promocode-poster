@@ -7,15 +7,20 @@ export async function searchCodes(db) {
   const worker = await db.createWorker();
 
   for (const ParserClass of parsers) {
-    const parser = await new ParserClass().init();
-    const codes = await parser.getCodes();
-    await parser.destroy();
+    try {
+      const parser = await new ParserClass().init();
+      const codes = await parser.getCodes();
+      await parser.destroy();
 
-    for (const code of codes) {
-      if (!worker.has(code.code)) {
-        worker.add(code.code, code.description);
-        foundCodes.push(code);
+      for (const code of codes) {
+        if (!worker.has(code.code)) {
+          worker.add(code.code, code.description);
+          foundCodes.push(code);
+        }
       }
+
+    } catch(e) {
+      logger.error(e);
     }
   }
 
