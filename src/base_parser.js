@@ -22,7 +22,7 @@ export class BaseParser {
     );
   }
   async getPage() {
-    const SKIP_RESOURCES = ["image", "stylesheet", "font", "script"];
+    const SKIP_RESOURCES = ["image", "stylesheet", "font", "script", "fetch", "xhr"];
 
     this.page = await this.browser.newPage();
     await this.page.setRequestInterception(true);
