@@ -31,7 +31,7 @@ export default class Parser extends BaseParser {
     const received = await page.evaluate((selector) => {
       const lists = document.querySelectorAll(selector);
       const items = [];
-      for (const list of [...lists].slice(0, 1)) {
+      for (const list of [...lists].slice(0, 2)) {
         for (const child of list.children) {
           items.push(child.innerText);
         }
