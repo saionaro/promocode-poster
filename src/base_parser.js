@@ -11,7 +11,10 @@ export class BaseParser {
   }
   async init() {
     logger.info(`Launching Puppeteer for ${this.url}`);
-    this.browser = await puppeteer.launch();
+    this.browser = await puppeteer.launch({
+      // TODO: avoid sandbox disabling by launching app with no root access
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     return this;
   }
   async destroy() {
