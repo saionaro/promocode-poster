@@ -1,8 +1,12 @@
 import puppeteer from "puppeteer";
 import prettyBytes from "pretty-bytes";
+import { parseJson, sanitize } from "./util.js";
 import { logger } from "./log.js";
 
 const IGNORE_RESOURCES_REGEX = /youtube/i;
+const MAX_CODE_LEN = 15;
+const DENIED_SYMBOLS = '!#@: '.split('');
+
 export class BaseParser {
   constructor() {
     this.url = null;
@@ -49,5 +53,45 @@ export class BaseParser {
     });
     await this.page.goto(this.url);
     return this.page;
+  }
+  async getCodes() {
+    const page = await this.getPage();
+    const codesUlSelector = this.listSelectors.join(", ");
+    await page.waitForSelector(this.rootSelector);
+    const received = await page.evaluate((selector) => {
+      const lists = document.querySelectorAll(selector);
+      const items = [];
+      for (const list of lists) {
+        for (const child of list.children) {
+          items.push(child.innerText);
+        }
+      }
+      return JSON.stringify(items);
+    }, codesUlSelector);
+    return this.filter(this.parse(parseJson(received) || []));
+  }
+  parse(rawList) {
+    const parsed = [];
+    for (const r of rawList) {
+      let val = sanitize(r);
+      const [code, ...description] = val.split(this.divider);
+      parsed.push({
+        code: code.trim().toUpperCase(),
+        description: description.join(this.divider).trim(),
+        source: this.url,
+      });
+    }
+    return parsed;
+  }
+  filter(rawList) {
+    return rawList.filter(codeRecord=>{
+      if (codeRecord.code.length > MAX_CODE_LEN)
+        return false;
+      if (DENIED_SYMBOLS.some(sym=>codeRecord.code.includes(sym)))
+        return false;
+      if (!codeRecord.description)
+        return false;
+      return true;
+    });
   }
 }
