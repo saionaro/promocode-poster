@@ -18,6 +18,8 @@ async function run() {
   if (new_codes.length) {
     await postCodes(new_codes);
   }
+
+  logger.info("Finished");
 }
 
 await run();
