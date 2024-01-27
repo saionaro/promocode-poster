@@ -22,10 +22,10 @@ async function run() {
   const parsersConfig = await Parser.loadConfig(PARSERS_CONFIG_PATH);
   const parsers = parsersConfig.map(cfg=>new Parser(cfg));
 
-  const new_codes = await searchCodes(db, parsers);
+  const newCodes = await searchCodes(db, parsers);
 
-  if (new_codes.length) {
-    await postCodes(new_codes);
+  if (newCodes.length) {
+    await postCodes(newCodes);
   }
 
   logger.info("Finished");

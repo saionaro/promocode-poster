@@ -11,17 +11,12 @@ export async function searchCodes(db, parsers) {
       const codes = await parser.getCodes();
       await parser.destroy();
 
-      logger.info(parser.name)
-      for (const c of codes)
-        logger.info(`${c.code} - ${c.description}`);
-
       for (const code of codes) {
         if (!worker.has(code.code)) {
           worker.add(code.code, code.description);
           foundCodes.push(code);
         }
       }
-
     } catch(e) {
       logger.error(e);
     }
