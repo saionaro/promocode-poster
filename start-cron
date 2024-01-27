@@ -1,0 +1,2 @@
+PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+0 */6 * * * node /app/src/index.js >> /var/log/finder-cron.log 2>&1
