@@ -103,6 +103,7 @@ export class Parser {
         code: code.trim().toUpperCase(),
         description: description.join(this.divider).trim(),
         source: this.url,
+        sourceName: this.name,
       });
     }
     return parsed;
