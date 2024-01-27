@@ -3,8 +3,14 @@ import { postCodes } from "./msg.js";
 import { DB } from "./db.js";
 import { logger } from "./log.js";
 import { searchCodes } from "./finder.js";
+import { Parser } from "./parser.js";
 
-const { DB_DIR, NODE_ENV, TELEGRAM_CHANNEL_ID } = process.env;
+const {
+  DB_DIR,
+  NODE_ENV,
+  TELEGRAM_CHANNEL_ID,
+  PARSERS_CONFIG_PATH,
+} = process.env;
 
 async function run() {
   logger.info("Started");
@@ -13,7 +19,10 @@ async function run() {
   const db = new DB(DB_DIR);
   await db.init();
 
-  const new_codes = await searchCodes(db);
+  const parsersConfig = await Parser.loadConfig(PARSERS_CONFIG_PATH);
+  const parsers = parsersConfig.map(cfg=>new Parser(cfg));
+
+  const new_codes = await searchCodes(db, parsers);
 
   if (new_codes.length) {
     await postCodes(new_codes);

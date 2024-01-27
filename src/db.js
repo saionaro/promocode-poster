@@ -1,7 +1,7 @@
 import fs from "fs/promises";
-import { resolve, join, isAbsolute } from "path";
-import { getDirname } from "./util.js";
+import { join } from "path";
 import { logger } from "./log.js";
+import { path2Absolute, exists } from "./util.js";
 
 const DB_NAME = "db.json";
 const ENCODING = "utf-8";
@@ -10,15 +10,6 @@ const DEFAULT_STRUCTURE = {
   codes: {},
   updateTs: 0,
 };
-
-async function exists(path) {
-  try {
-    await fs.stat(path);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
 
 async function createDb(path) {
   await fs.mkdir(path, { recursive: true });
@@ -65,13 +56,8 @@ export class DB {
   #dbDirPath;
   #dbPath;
   #activeWorker = null;
-  constructor(raw_path) {
-    let path = raw_path;
-    if (!isAbsolute(raw_path)) {
-      const dirname = getDirname(import.meta.url);
-      path = join(dirname, "..", raw_path);
-    }
-    this.#dbDirPath = resolve(path);
+  constructor(rawPath) {
+    this.#dbDirPath = path2Absolute(import.meta.url, rawPath);
     this.#dbPath = join(this.#dbDirPath, DB_NAME);
   }
 

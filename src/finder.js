@@ -1,16 +1,19 @@
-import { parsers } from "./parsers/index.js";
 import { logger } from "./log.js";
 
-export async function searchCodes(db) {
+export async function searchCodes(db, parsers) {
   logger.info("Start codes search");
   const foundCodes = [];
   const worker = await db.createWorker();
 
-  for (const ParserClass of parsers) {
+  for (const parser of parsers) {
     try {
-      const parser = await new ParserClass().init();
+      await parser.init();
       const codes = await parser.getCodes();
       await parser.destroy();
+
+      logger.info(parser.name)
+      for (const c of codes)
+        logger.info(`${c.code} - ${c.description}`);
 
       for (const code of codes) {
         if (!worker.has(code.code)) {

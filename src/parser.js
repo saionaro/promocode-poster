@@ -1,17 +1,41 @@
 import puppeteer from "puppeteer";
 import prettyBytes from "pretty-bytes";
-import { parseJson, sanitize } from "./util.js";
+import { resolve, join, isAbsolute } from "path";
+import { getDirname, exists } from "./util.js";
+import { parseJson, sanitize, path2Absolute } from "./util.js";
 import { logger } from "./log.js";
 
 const IGNORE_RESOURCES_REGEX = /youtube/i;
 const MAX_CODE_LEN = 15;
 const DENIED_SYMBOLS = '!#@: '.split('');
 
-export class BaseParser {
-  constructor() {
-    this.url = null;
+export class Parser {
+  constructor(meta) {
+    this.name = meta.name;
+    this.url = meta.source_url;
+    this.rootSelector = meta.root_selector;
+    this.listSelectors = meta.list_selectors;
+    this.divider = meta.divider;
     this.browser = null;
     this.bytesTransferred = 0;
+  }
+  static async loadConfig(rawPath){
+    const cfgPath = path2Absolute(import.meta.url, rawPath);
+    
+    if (!await exists(cfgPath)){
+      logger.error(`Parsers config is not found at: ${cfgPath}`)
+      process.exit(1);
+    }
+
+    try {
+      const config = await import(cfgPath, {
+        assert: { type: "json" },
+      });
+      return config.default;
+    } catch(error) {
+      logger.error(error);
+      process.exit(1);
+    }
   }
   async init() {
     logger.info(`Launching Puppeteer for ${this.url}`);

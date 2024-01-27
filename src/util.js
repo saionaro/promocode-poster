@@ -1,4 +1,5 @@
-import { dirname } from "path";
+import { dirname, resolve, join, isAbsolute } from "path";
+import fs from "fs/promises";
 import { fileURLToPath } from "url";
 import { logger } from "./log.js";
 
@@ -24,4 +25,22 @@ export function sanitize(val) {
 export function getDirname(fileUrl) {
   const __filename = fileURLToPath(fileUrl);
   return dirname(__filename);
+}
+
+export function path2Absolute(metaUrl, providedPath){
+  let path = providedPath;
+  if (!isAbsolute(path)) {
+    const dirname = getDirname(metaUrl);
+    path = join(dirname, "..", path);
+  }
+  return resolve(path);
+}
+
+export async function exists(path) {
+  try {
+    await fs.stat(path);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
