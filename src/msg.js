@@ -2,8 +2,12 @@ import FormData from "form-data";
 import axios from "axios";
 import { logger } from "./log.js";
 
-const { TELEGRAM_BOT_KEY, TELEGRAM_CHANNEL_ID, NODE_ENV } = process.env;
-const REDEEM_URL = "https://genshin.hoyoverse.com/en/gift";
+const {
+  TELEGRAM_BOT_KEY,
+  TELEGRAM_CHANNEL_ID,
+  NODE_ENV,
+  REDEEM_URL,
+ } = process.env;
 const SIGNATURE = `\n--\n[How to redeem a code](${REDEEM_URL})`;
 
 export async function postMessage(text) {
@@ -21,7 +25,7 @@ export async function postMessage(text) {
     logger.info("Message sent");
   } catch (e) {
     logger.error("Message is NOT sent");
-    logger.error(e.response.data.description);
+    logger.error(e.response?.data?.description);
   }
 }
 
@@ -30,7 +34,7 @@ const formatMessage = (promocode) => {
   res += "\n";
   res += `${promocode.description}`;
   res += "\n";
-  res += `[source](${promocode.source})`;
+  res += `Source: [${promocode.sourceName}](${promocode.source})`;
   res += "\n";
   return res;
 };
