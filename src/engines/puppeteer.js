@@ -1,42 +1,11 @@
 import puppeteer from "puppeteer";
-import prettyBytes from "pretty-bytes";
-import { resolve, join, isAbsolute } from "path";
-import { getDirname, exists } from "./util.js";
-import { parseJson, sanitize, path2Absolute } from "./util.js";
-import { logger } from "./log.js";
+import { parseJson } from "../util.js";
+import { logger } from "../log.js";
+import { BaseEngine } from "./base.js"
 
 const IGNORE_RESOURCES_REGEX = /youtube/i;
-const MAX_CODE_LEN = 15;
-const DENIED_SYMBOLS = '!#@: '.split('');
 
-export class Parser {
-  constructor(meta) {
-    this.name = meta.name;
-    this.url = meta.source_url;
-    this.rootSelector = meta.root_selector;
-    this.listSelectors = meta.list_selectors;
-    this.divider = meta.divider;
-    this.browser = null;
-    this.bytesTransferred = 0;
-  }
-  static async loadConfig(rawPath){
-    const cfgPath = path2Absolute(import.meta.url, rawPath);
-    
-    if (!await exists(cfgPath)){
-      logger.error(`Parsers config is not found at: ${cfgPath}`)
-      process.exit(1);
-    }
-
-    try {
-      const config = await import(cfgPath, {
-        assert: { type: "json" },
-      });
-      return config.default;
-    } catch(error) {
-      logger.error(error);
-      process.exit(1);
-    }
-  }
+export class Engine extends BaseEngine {
   async init() {
     logger.info(`Launching Puppeteer for ${this.url}`);
     this.browser = await puppeteer.launch({
@@ -48,9 +17,7 @@ export class Parser {
   async destroy() {
     await this.page.close();
     await this.browser.close();
-    logger.info(
-      `Network usage [${prettyBytes(this.bytesTransferred)}] by ${this.url}`
-    );
+    await super.destroy();
   }
   async getPage() {
     const SKIP_RESOURCES = ["image", "stylesheet", "font", "script", "fetch", "xhr"];
@@ -93,30 +60,5 @@ export class Parser {
       return JSON.stringify(items);
     }, codesUlSelector);
     return this.filter(this.parse(parseJson(received) || []));
-  }
-  parse(rawList) {
-    const parsed = [];
-    for (const r of rawList) {
-      let val = sanitize(r);
-      const [code, ...description] = val.split(this.divider);
-      parsed.push({
-        code: code.trim().toUpperCase(),
-        description: description.join(this.divider).trim(),
-        source: this.url,
-        sourceName: this.name,
-      });
-    }
-    return parsed;
-  }
-  filter(rawList) {
-    return rawList.filter(codeRecord=>{
-      if (codeRecord.code.length > MAX_CODE_LEN)
-        return false;
-      if (DENIED_SYMBOLS.some(sym=>codeRecord.code.includes(sym)))
-        return false;
-      if (!codeRecord.description)
-        return false;
-      return true;
-    });
   }
 }

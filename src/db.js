@@ -57,7 +57,7 @@ export class DB {
   #dbPath;
   #activeWorker = null;
   constructor(rawPath) {
-    this.#dbDirPath = path2Absolute(import.meta.url, rawPath);
+    this.#dbDirPath = path2Absolute(rawPath);
     this.#dbPath = join(this.#dbDirPath, DB_NAME);
   }
 

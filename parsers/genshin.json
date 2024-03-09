@@ -1,6 +1,7 @@
 [
   {
     "name": "GameRant",
+    "engine": "jsdom",
     "source_url": "https://gamerant.com/genshin-impact-redeem-code-livestream-codes-free-primogem-redemption/",
     "root_selector": ".article-body",
     "divider": " - ",
@@ -10,6 +11,7 @@
   },
   {
     "name": "PocketTactics",
+    "engine": "jsdom",
     "source_url": "https://www.pockettactics.com/genshin-impact/codes",
     "root_selector": ".category-genshin-impact",
     "divider": " – ",
@@ -19,6 +21,7 @@
   },
   {
     "name": "VG247",
+    "engine": "jsdom",
     "source_url": "https://www.vg247.com/genshin-impact-codes",
     "root_selector": ".article_body_content",
     "divider": ": ",
