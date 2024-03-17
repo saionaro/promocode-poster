@@ -33,7 +33,7 @@
     "puppeteer": "^19.7.1"
   },
   "engines": {
-    "node": ">=16.13.2"
+    "node": ">=20"
   },
   "devDependencies": {
     "nodemon": "^2.0.21",
