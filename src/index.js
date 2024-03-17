@@ -1,5 +1,5 @@
 import "./config.js";
-import { postCodes } from "./msg.js";
+import { postCodes, postNotification } from "./msg.js";
 import { DB } from "./db.js";
 import { logger } from "./log.js";
 import { searchCodes } from "./finder.js";
@@ -18,7 +18,6 @@ async function run() {
   logger.info(`TELEGRAM_CHANNEL_ID: ${TELEGRAM_CHANNEL_ID}`);
   const db = new DB(DB_DIR);
   await db.init();
-
   const parsersConfig = await loadConfig(PARSERS_CONFIG_PATH);
   const parsers = parsersConfig.map(cfg=>{
     const Engine = engines[cfg.engine] ?? engines.jsdom;

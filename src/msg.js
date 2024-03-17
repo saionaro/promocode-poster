@@ -5,16 +5,16 @@ import { logger } from "./log.js";
 const {
   TELEGRAM_BOT_KEY,
   TELEGRAM_CHANNEL_ID,
-  NODE_ENV,
+  TELEGRAM_CHANNEL_ADMIN_ID,
   REDEEM_URL,
  } = process.env;
-const SIGNATURE = `\n--\n[How to redeem a code](${REDEEM_URL})`;
+const SIGNATURE = `\n--\n[Redeem a code](${REDEEM_URL})`;
 
-export async function postMessage(text) {
-  logger.info(`Sending message to [${TELEGRAM_CHANNEL_ID}] [${NODE_ENV}]`);
+async function postMessage(target_id, text) {
+  logger.info(`Sending message to [${target_id}]`);
   let form = new FormData();
-  form.append("chat_id", TELEGRAM_CHANNEL_ID);
-  form.append("text", `${text}${SIGNATURE}`);
+  form.append("chat_id", target_id);
+  form.append("text", text);
   form.append("parse_mode", "markdown");
   form.append("disable_web_page_preview", "true");
   try {
@@ -22,9 +22,9 @@ export async function postMessage(text) {
       `https://api.telegram.org/bot${TELEGRAM_BOT_KEY}/sendMessage`,
       form
     );
-    logger.info("Message sent");
+    logger.info(`Message to [${target_id}] sent`);
   } catch (e) {
-    logger.error("Message is NOT sent");
+    logger.error(`Message to [${target_id}] is NOT sent`);
     logger.error(e.response?.data?.description);
   }
 }
@@ -44,5 +44,11 @@ export async function postCodes(codes) {
   for (const code of codes) {
     message += `\n${formatMessage(code)}`;
   }
-  await postMessage(message);
+  await postMessage(TELEGRAM_CHANNEL_ID, `${message}${SIGNATURE}`);
+}
+
+export async function postNotification(message) {
+  if (!TELEGRAM_CHANNEL_ADMIN_ID)
+    return void logger.info(`No TELEGRAM_CHANNEL_ADMIN_ID set`);
+  await postMessage(TELEGRAM_CHANNEL_ADMIN_ID, message);
 }
