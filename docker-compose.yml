@@ -13,3 +13,5 @@ services:
       options:
         max-size: '512k'
         max-file: '10'
+    volumes:
+      - ./data:/app/data
