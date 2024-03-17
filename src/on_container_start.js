@@ -12,3 +12,8 @@ await postNotification([
   `Channel ID: *${TELEGRAM_CHANNEL_ID}*`,
   `Parser: *${PARSERS_CONFIG_PATH}*`,
 ].join('\n'));
+
+if (NODE_ENV === "development") {
+  const { run } = await import('./index.js')
+  await run();
+}

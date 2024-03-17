@@ -12,7 +12,7 @@ const {
   PARSERS_CONFIG_PATH,
 } = process.env;
 
-async function run() {
+export async function run() {
   logger.info("Started");
   logger.info(`NODE_ENV: ${NODE_ENV}`);
   logger.info(`TELEGRAM_CHANNEL_ID: ${TELEGRAM_CHANNEL_ID}`);
