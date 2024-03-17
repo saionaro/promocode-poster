@@ -1,4 +1,4 @@
-# Promo Dealer
+# Promocode Poster
 ---
 ## Development
 
