@@ -1,7 +1,7 @@
 {
   "name": "promocode-poster",
   "version": "0.0.1",
-  "description": "",
+  "description": "A promotion codes finder and poster engine",
   "main": "./src/index.js",
   "scripts": {
     "dev": "nodemon --config ./nodemon.json"
