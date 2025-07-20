@@ -27,7 +27,7 @@ export function getDirname(fileUrl) {
   return dirname(__filename);
 }
 
-export function path2Absolute(providedPath){
+export function path2Absolute(providedPath) {
   let path = providedPath;
   if (!isAbsolute(path)) {
     const dirname = getDirname(import.meta.url);

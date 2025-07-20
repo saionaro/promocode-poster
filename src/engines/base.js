@@ -1,10 +1,11 @@
+import fs from "fs/promises";
 import prettyBytes from "pretty-bytes";
 import { exists } from "../util.js";
 import { sanitize, path2Absolute } from "../util.js";
 import { logger } from "../log.js";
 
 const MAX_CODE_LEN = 15;
-const DENIED_SYMBOLS = '!#@: '.split('');
+const DENIED_SYMBOLS = "!#@: ".split("");
 
 export class BaseEngine {
   constructor(meta) {
@@ -16,26 +17,25 @@ export class BaseEngine {
     this.browser = null;
     this.bytesTransferred = 0;
   }
-  static async loadConfig(rawPath){
+  static async loadConfig(rawPath) {
     const cfgPath = path2Absolute(rawPath);
-    
-    if (!await exists(cfgPath)){
-      logger.error(`Parsers config is not found at: ${cfgPath}`)
+    console.log(`Loading parsers config from: ${cfgPath}`);
+    if (!(await exists(cfgPath))) {
+      logger.error(`Parsers config is not found at: ${cfgPath}`);
       process.exit(1);
     }
 
     try {
-      const config = await import(cfgPath, {
-        assert: { type: "json" },
-      });
-      return config.default;
-    } catch(error) {
+      const content = await fs.readFile(cfgPath, "utf-8");
+      const config = JSON.parse(content);
+      return config;
+    } catch (error) {
       logger.error(error);
       process.exit(1);
     }
   }
   async init() {
-    throw new Error('init method needs to be implemented');
+    throw new Error("init method needs to be implemented");
   }
   async destroy() {
     logger.info(
@@ -43,10 +43,10 @@ export class BaseEngine {
     );
   }
   async getPage() {
-    throw new Error('getPage method needs to be implemented');
+    throw new Error("getPage method needs to be implemented");
   }
   async getCodes() {
-    throw new Error('getPage method needs to be implemented');
+    throw new Error("getPage method needs to be implemented");
   }
   parse(rawList) {
     const parsed = [];
@@ -63,13 +63,11 @@ export class BaseEngine {
     return parsed;
   }
   filter(rawList) {
-    return rawList.filter(codeRecord=>{
-      if (codeRecord.code.length > MAX_CODE_LEN)
+    return rawList.filter((codeRecord) => {
+      if (codeRecord.code.length > MAX_CODE_LEN) return false;
+      if (DENIED_SYMBOLS.some((sym) => codeRecord.code.includes(sym)))
         return false;
-      if (DENIED_SYMBOLS.some(sym=>codeRecord.code.includes(sym)))
-        return false;
-      if (!codeRecord.description)
-        return false;
+      if (!codeRecord.description) return false;
       return true;
     });
   }

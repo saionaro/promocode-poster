@@ -1,6 +1,9 @@
 {
   "ext": "js,env",
-  "watch": ["./.env", "./src"],
+  "watch": [
+    "./.env",
+    "./src"
+  ],
   "env": {
     "NODE_ENV": "development"
   }

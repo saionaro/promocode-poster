@@ -84,7 +84,7 @@ export class DB {
   }
   async #saveContent(data) {
     try {
-      await fs.writeFile(this.#dbPath, JSON.stringify(data));
+      await fs.writeFile(this.#dbPath, JSON.stringify(data, null, 2));
       return true;
     } catch (e) {
       logger.error(e);

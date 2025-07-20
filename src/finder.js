@@ -17,7 +17,7 @@ export async function searchCodes(db, parsers) {
           foundCodes.push(code);
         }
       }
-    } catch(e) {
+    } catch (e) {
       logger.error(e);
     }
   }

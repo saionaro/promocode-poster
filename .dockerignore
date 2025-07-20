@@ -1,1 +1,35 @@
+# Dependencies
 node_modules
+npm-debug.log*
+
+# Development files
+.env.local
+.env.*.local
+nodemon.json
+
+# Git
+.git
+.gitignore
+
+# Documentation and images (if not needed in container)
+README.md
+imgs
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log

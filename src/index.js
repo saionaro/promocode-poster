@@ -5,12 +5,8 @@ import { logger } from "./log.js";
 import { searchCodes } from "./finder.js";
 import engines, { loadConfig } from "./engines/index.js";
 
-const {
-  DB_DIR,
-  NODE_ENV,
-  TELEGRAM_CHANNEL_ID,
-  PARSERS_CONFIG_PATH,
-} = process.env;
+const { DB_DIR, NODE_ENV, TELEGRAM_CHANNEL_ID, PARSERS_CONFIG_PATH } =
+  process.env;
 
 export async function run() {
   logger.info("Started");
@@ -19,7 +15,7 @@ export async function run() {
   const db = new DB(DB_DIR);
   await db.init();
   const parsersConfig = await loadConfig(PARSERS_CONFIG_PATH);
-  const parsers = parsersConfig.map(cfg=>{
+  const parsers = parsersConfig.map((cfg) => {
     const Engine = engines[cfg.engine] ?? engines.jsdom;
     return new Engine(cfg);
   });

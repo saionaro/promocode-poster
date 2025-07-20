@@ -1,28 +1,17 @@
-FROM node:20-alpine
-
-RUN apk add --no-cache \
-    chromium \
-    nss \
-    freetype \
-    harfbuzz \
-    ca-certificates \
-    ttf-freefont
+FROM node:24-alpine
 
 WORKDIR /app
 
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
 COPY start-cron /etc/cron.d/start-cron
+COPY cron-entrypoint.sh /cron-entrypoint.sh
 RUN chmod 0644 /etc/cron.d/start-cron \
   && touch /var/log/finder-cron.log \
-  && crontab /etc/cron.d/start-cron
+  && crontab /etc/cron.d/start-cron \
+  && chmod +x /cron-entrypoint.sh
 
-# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
-
-COPY package.json package-lock.json ./
-RUN npm ci && npm i pino-pretty -g
 COPY . .
 
-COPY cron-entrypoint.sh /cron-entrypoint.sh
-RUN chmod 755 /cron-entrypoint.sh
-
-ENTRYPOINT /cron-entrypoint.sh
+ENTRYPOINT ["/cron-entrypoint.sh"]
