@@ -1,5 +1,5 @@
 import "./config.js";
-import { postCodes, postNotification } from "./msg.js";
+import { postCodes } from "./msg.js";
 import { DB } from "./db.js";
 import { logger } from "./log.js";
 import { searchCodes } from "./finder.js";
