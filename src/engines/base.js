@@ -18,30 +18,21 @@ export class BaseEngine {
     this.bytesTransferred = 0;
   }
   static async loadConfig(rawPath) {
-    // Support comma-separated multiple config paths
-    const configPaths = rawPath.split(',').map(path => path.trim());
-    const allConfigs = [];
-    
-    for (const singleRawPath of configPaths) {
-      const cfgPath = path2Absolute(singleRawPath);
-      console.log(`Loading parsers config from: ${cfgPath}`);
-      if (!(await exists(cfgPath))) {
-        logger.error(`Parsers config is not found at: ${cfgPath}`);
-        process.exit(1);
-      }
-
-      try {
-        const content = await fs.readFile(cfgPath, "utf-8");
-        const config = JSON.parse(content);
-        // Add all parsers from this config to the combined list
-        allConfigs.push(...config);
-      } catch (error) {
-        logger.error(error);
-        process.exit(1);
-      }
+    const cfgPath = path2Absolute(rawPath);
+    console.log(`Loading parsers config from: ${cfgPath}`);
+    if (!(await exists(cfgPath))) {
+      logger.error(`Parsers config is not found at: ${cfgPath}`);
+      process.exit(1);
     }
-    
-    return allConfigs;
+
+    try {
+      const content = await fs.readFile(cfgPath, "utf-8");
+      const config = JSON.parse(content);
+      return config;
+    } catch (error) {
+      logger.error(error);
+      process.exit(1);
+    }
   }
   async init() {
     throw new Error("init method needs to be implemented");

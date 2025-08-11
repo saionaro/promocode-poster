@@ -14,8 +14,17 @@ export async function run() {
   logger.info(`TELEGRAM_CHANNEL_ID: ${TELEGRAM_CHANNEL_ID}`);
   const db = new DB(DB_DIR);
   await db.init();
-  const parsersConfig = await loadConfig(PARSERS_CONFIG_PATH);
-  const parsers = parsersConfig.map((cfg) => {
+  
+  // Support comma-separated multiple config paths
+  const configPaths = PARSERS_CONFIG_PATH.split(',').map(path => path.trim());
+  const allParsersConfig = [];
+  
+  for (const configPath of configPaths) {
+    const parsersConfig = await loadConfig(configPath);
+    allParsersConfig.push(...parsersConfig);
+  }
+  
+  const parsers = allParsersConfig.map((cfg) => {
     const Engine = engines[cfg.engine] ?? engines.jsdom;
     return new Engine(cfg);
   });
