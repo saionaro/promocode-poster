@@ -44,3 +44,12 @@ export async function exists(path) {
     return false;
   }
 }
+
+export function getBotKey(config) {
+  const botKey = process.env[config.bot_key_env];
+  if (!botKey) {
+    logger.error(`Bot key not found in environment variable: ${config.bot_key_env}`);
+    return null;
+  }
+  return botKey;
+}

@@ -5,10 +5,11 @@ import { logger } from "./log.js";
 import { searchCodes } from "./finder.js";
 import engines, { loadConfig } from "./engines/index.js";
 import { join } from "path";
+import { getBotKey } from "./util.js";
 
 const { DB_DIR, NODE_ENV, PARSERS_CONFIG_PATH } = process.env;
 
-export async function run(gameConfig) {
+export async function run(gameConfig, botKey) {
   logger.info(`Processing ${gameConfig.game} with ${gameConfig.parsers.length} parsers`);
   
   // Create database instance for this game
@@ -26,7 +27,7 @@ export async function run(gameConfig) {
   
   if (newCodes.length) {
     logger.info(`Found ${newCodes.length} new codes for ${gameConfig.game}`);
-    await postCodes(newCodes, gameConfig);
+    await postCodes(newCodes, gameConfig, botKey);
   } else {
     logger.info(`No new codes found for ${gameConfig.game}`);
   }
@@ -42,7 +43,10 @@ const configPaths = PARSERS_CONFIG_PATH.split(',').map(path => path.trim());
 // Process each config file
 for (const configPath of configPaths) {
   const config = await loadConfig(configPath);
-  await run(config);
+  const botKey = getBotKey(config);
+  if (botKey) {
+    await run(config, botKey);
+  }
 }
 
 logger.info("Finished");

@@ -34,8 +34,7 @@ const formatMessage = (promocode) => {
   return res;
 };
 
-export async function postCodes(codes, gameConfig) {
-  const botKey = process.env[gameConfig.bot_key_env];
+export async function postCodes(codes, gameConfig, botKey) {
   if (!botKey) {
     logger.error(`Bot key not found in environment variable: ${gameConfig.bot_key_env}`);
     return;
@@ -49,16 +48,14 @@ export async function postCodes(codes, gameConfig) {
   await postMessage(`${message}${SIGNATURE}`, gameConfig.channel_id, botKey);
 }
 
-export async function postNotification(message) {
+export async function postNotification(message, botKey) {
   if (!TELEGRAM_CHANNEL_ADMIN_ID)
     return void logger.info(`No TELEGRAM_CHANNEL_ADMIN_ID set`);
-  // For notifications, we'll use the first available bot key
-  // This is a fallback and should be improved if needed
-  const botKeyEnvs = Object.keys(process.env).filter(key => key.startsWith('TELEGRAM_BOT_KEY_'));
-  const botKey = botKeyEnvs.length > 0 ? process.env[botKeyEnvs[0]] : null;
+  
   if (!botKey) {
-    logger.error('No bot key available for admin notifications');
+    logger.error('No bot key provided for admin notifications');
     return;
   }
+  
   await postMessage(message, TELEGRAM_CHANNEL_ADMIN_ID, botKey);
 }

@@ -1,7 +1,8 @@
 import "./config.js";
-import { postMessage } from "./msg.js";
+import { postNotification } from "./msg.js";
 import { loadConfig } from "./engines/index.js";
 import { logger } from "./log.js";
+import { getBotKey } from "./util.js";
 
 const { NODE_ENV, PARSERS_CONFIG_PATH, TELEGRAM_CHANNEL_ADMIN_ID } = process.env;
 
@@ -13,10 +14,10 @@ const configPaths = PARSERS_CONFIG_PATH.split(',').map(path => path.trim());
 // Send initialization notification with each bot
 for (const configPath of configPaths) {
   const config = await loadConfig(configPath);
-  const botKey = process.env[config.bot_key_env];
+  const botKey = getBotKey(config);
   
   if (botKey && TELEGRAM_CHANNEL_ADMIN_ID) {
-    await postMessage(
+    await postNotification(
       [
         `🚀 *Promocodes Poster* initialized with following params:\n `,
         `Game: *${config.game}*`,
@@ -24,7 +25,6 @@ for (const configPath of configPaths) {
         `Channel ID: *${config.channel_id}*`,
         `Parser Config: *${configPath}*`,
       ].join("\n"),
-      TELEGRAM_CHANNEL_ADMIN_ID,
       botKey
     );
   }
@@ -36,6 +36,9 @@ if (NODE_ENV === "development") {
   // Process each config file
   for (const configPath of configPaths) {
     const config = await loadConfig(configPath);
-    await run(config);
+    const botKey = getBotKey(config);
+    if (botKey) {
+      await run(config, botKey);
+    }
   }
 }
