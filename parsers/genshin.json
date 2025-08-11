@@ -1,37 +1,44 @@
-[
-  {
-    "name": "GameRant",
-    "engine": "jsdom",
-    "source_url": "https://gamerant.com/genshin-impact-redeem-code-livestream-codes-free-primogem-redemption/",
-    "root_selector": ".article-body",
-    "divider": " - ",
-    "list_selectors": [
-      ".content-block-regular ul"
-    ]
-  },
-  {
-    "name": "PocketTactics",
-    "engine": "jsdom",
-    "source_url": "https://www.pockettactics.com/genshin-impact/codes",
-    "root_selector": ".category-genshin-impact",
-    "divider": " – ",
-    "list_selectors": [
-      ".post-6906 ul"
-    ]
-  },
-  {
-    "name": "VG247",
-    "engine": "jsdom",
-    "source_url": "https://www.vg247.com/genshin-impact-codes",
-    "root_selector": ".article_body_content",
-    "divider": ": ",
-    "list_selectors": [
-      "#codes + ul",
-      "#codes + p + ul",
-      "#livestream + ul",
-      "#livestream + p + ul",
-      "#livestream-codes + ul",
-      "#livestream-codes + p + ul"
-    ]
-  }
-]
+{
+  "game": "genshin",
+  "bot_key_env": "TELEGRAM_BOT_KEY_GENSHIN",
+  "channel_id": "-1001234567890",
+  "redeem_url": "https://genshin.hoyoverse.com/en/gift",
+  "db_file": "db_genshin.json",
+  "parsers": [
+    {
+      "name": "GameRant",
+      "engine": "jsdom",
+      "source_url": "https://gamerant.com/genshin-impact-redeem-code-livestream-codes-free-primogem-redemption/",
+      "root_selector": ".article-body",
+      "divider": " - ",
+      "list_selectors": [
+        ".content-block-regular ul"
+      ]
+    },
+    {
+      "name": "PocketTactics",
+      "engine": "jsdom",
+      "source_url": "https://www.pockettactics.com/genshin-impact/codes",
+      "root_selector": ".category-genshin-impact",
+      "divider": " – ",
+      "list_selectors": [
+        ".post-6906 ul"
+      ]
+    },
+    {
+      "name": "VG247",
+      "engine": "jsdom",
+      "source_url": "https://www.vg247.com/genshin-impact-codes",
+      "root_selector": ".article_body_content",
+      "divider": ": ",
+      "list_selectors": [
+        "#codes + ul",
+        "#codes + p + ul",
+        "#livestream + ul",
+        "#livestream + p + ul",
+        "#livestream-codes + ul",
+        "#livestream-codes + p + ul"
+      ]
+    }
+  ]
+}

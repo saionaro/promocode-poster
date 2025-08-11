@@ -1,9 +1,8 @@
 import fs from "fs/promises";
-import { join } from "path";
+import { join, dirname } from "path";
 import { logger } from "./log.js";
 import { path2Absolute, exists } from "./util.js";
 
-const DB_NAME = "db.json";
 const ENCODING = "utf-8";
 
 const DEFAULT_STRUCTURE = {
@@ -11,9 +10,8 @@ const DEFAULT_STRUCTURE = {
   updateTs: 0,
 };
 
-async function createDb(path) {
-  await fs.mkdir(path, { recursive: true });
-  const dbPath = join(path, DB_NAME);
+async function createDb(dbPath) {
+  await fs.mkdir(dirname(dbPath), { recursive: true });
   const draft = {
     ...DEFAULT_STRUCTURE,
   };
@@ -53,19 +51,17 @@ class Worker {
 }
 
 export class DB {
-  #dbDirPath;
   #dbPath;
   #activeWorker = null;
-  constructor(rawPath) {
-    this.#dbDirPath = path2Absolute(rawPath);
-    this.#dbPath = join(this.#dbDirPath, DB_NAME);
+  constructor(dbFilePath) {
+    this.#dbPath = path2Absolute(dbFilePath);
   }
 
   async init() {
     if (!(await exists(this.#dbPath))) {
-      await createDb(this.#dbDirPath);
+      await createDb(this.#dbPath);
     }
-    logger.info("DB inited");
+    logger.info(`DB inited: ${this.#dbPath}`);
   }
   async createWorker() {
     this.#activeWorker = new Worker(this);

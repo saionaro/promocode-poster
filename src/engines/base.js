@@ -28,7 +28,18 @@ export class BaseEngine {
     try {
       const content = await fs.readFile(cfgPath, "utf-8");
       const config = JSON.parse(content);
-      return config;
+      
+      // Return both the parsers and the game config
+      return {
+        gameConfig: {
+          game: config.game,
+          bot_key_env: config.bot_key_env,
+          channel_id: config.channel_id,
+          redeem_url: config.redeem_url,
+          db_file: config.db_file
+        },
+        parsers: config.parsers
+      };
     } catch (error) {
       logger.error(error);
       process.exit(1);
