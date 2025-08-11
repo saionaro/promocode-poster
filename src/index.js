@@ -8,51 +8,41 @@ import { join } from "path";
 
 const { DB_DIR, NODE_ENV, PARSERS_CONFIG_PATH } = process.env;
 
-export async function run() {
-  logger.info("Started");
-  logger.info(`NODE_ENV: ${NODE_ENV}`);
+export async function run(gameConfig) {
+  logger.info(`Processing ${gameConfig.game} with ${gameConfig.parsers.length} parsers`);
   
-  // Support comma-separated multiple config paths
-  const configPaths = PARSERS_CONFIG_PATH.split(',').map(path => path.trim());
-  const gameConfigs = [];
+  // Create database instance for this game
+  const dbFilePath = join(DB_DIR, gameConfig.db_file);
+  const db = new DB(dbFilePath);
+  await db.init();
   
-  // Process each config file to extract game configurations and parsers
-  for (const configPath of configPaths) {
-    const { gameConfig, parsers } = await loadConfig(configPath);
-    
-    // Create database instance for this game
-    const dbFilePath = join(DB_DIR, gameConfig.db_file);
-    const db = new DB(dbFilePath);
-    await db.init();
-    
-    // Create engine instances for this game's parsers
-    const gameEngines = parsers.map((cfg) => {
-      const Engine = engines[cfg.engine] ?? engines.jsdom;
-      return new Engine(cfg);
-    });
-    
-    gameConfigs.push({
-      gameConfig,
-      db,
-      parsers: gameEngines
-    });
+  // Create engine instances for this game's parsers
+  const parsers = gameConfig.parsers.map((cfg) => {
+    const Engine = engines[cfg.engine] ?? engines.jsdom;
+    return new Engine(cfg);
+  });
+  
+  const newCodes = await searchCodes(db, parsers);
+  
+  if (newCodes.length) {
+    logger.info(`Found ${newCodes.length} new codes for ${gameConfig.game}`);
+    await postCodes(newCodes, gameConfig);
+  } else {
+    logger.info(`No new codes found for ${gameConfig.game}`);
   }
-  
-  // Process each game configuration
-  for (const { gameConfig, db, parsers } of gameConfigs) {
-    logger.info(`Processing ${gameConfig.game} with ${parsers.length} parsers`);
-    
-    const newCodes = await searchCodes(db, parsers);
-    
-    if (newCodes.length) {
-      logger.info(`Found ${newCodes.length} new codes for ${gameConfig.game}`);
-      await postCodes(newCodes, gameConfig);
-    } else {
-      logger.info(`No new codes found for ${gameConfig.game}`);
-    }
-  }
-
-  logger.info("Finished");
 }
 
-await run();
+// Main execution logic
+logger.info("Started");
+logger.info(`NODE_ENV: ${NODE_ENV}`);
+
+// Support comma-separated multiple config paths
+const configPaths = PARSERS_CONFIG_PATH.split(',').map(path => path.trim());
+
+// Process each config file
+for (const configPath of configPaths) {
+  const config = await loadConfig(configPath);
+  await run(config);
+}
+
+logger.info("Finished");

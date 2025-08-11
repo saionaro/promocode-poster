@@ -5,7 +5,7 @@ const {
   TELEGRAM_CHANNEL_ADMIN_ID,
 } = process.env;
 
-async function postMessage(botKey, targetId, text) {
+export async function postMessage(text, targetId, botKey) {
   logger.info(`Sending message to [${targetId}]`);
   let form = new FormData();
   form.append("chat_id", targetId);
@@ -46,7 +46,7 @@ export async function postCodes(codes, gameConfig) {
   for (const code of codes) {
     message += `\n${formatMessage(code)}`;
   }
-  await postMessage(botKey, gameConfig.channel_id, `${message}${SIGNATURE}`);
+  await postMessage(`${message}${SIGNATURE}`, gameConfig.channel_id, botKey);
 }
 
 export async function postNotification(message) {
@@ -60,5 +60,5 @@ export async function postNotification(message) {
     logger.error('No bot key available for admin notifications');
     return;
   }
-  await postMessage(botKey, TELEGRAM_CHANNEL_ADMIN_ID, message);
+  await postMessage(message, TELEGRAM_CHANNEL_ADMIN_ID, botKey);
 }
