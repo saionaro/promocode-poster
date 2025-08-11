@@ -16,6 +16,20 @@ There are two strategies to scrape a content:
 - Telegram channel - 1 piece
 - Telegram Bot - 1 piece (should be added to the Telegram channel with posting permissions)
 
+### Configuration
+
+The application supports running multiple parser configurations in a single execution. You can specify multiple configuration files by comma-separating them in the `PARSERS_CONFIG_PATH` environment variable:
+
+```bash
+# Single configuration (backward compatible)
+PARSERS_CONFIG_PATH=./parsers/genshin.json
+
+# Multiple configurations (run both in one execution)
+PARSERS_CONFIG_PATH=./parsers/genshin.json,./parsers/honkai.json
+```
+
+This allows you to monitor multiple games/sources with a single cron job instead of requiring separate app instances.
+
 ### Run a development server locally
 
 1. Clone the repo
