@@ -16,7 +16,7 @@ for (const configPath of configPaths) {
   const config = await loadConfig(configPath);
   const botKey = getBotKey(config);
   
-  if (botKey && TELEGRAM_CHANNEL_ADMIN_ID) {
+  if (TELEGRAM_CHANNEL_ADMIN_ID) {
     await postNotification(
       [
         `🚀 *Promocodes Poster* initialized with following params:\n `,
@@ -37,8 +37,6 @@ if (NODE_ENV === "development") {
   for (const configPath of configPaths) {
     const config = await loadConfig(configPath);
     const botKey = getBotKey(config);
-    if (botKey) {
-      await run(config, botKey);
-    }
+    await run(config, botKey);
   }
 }

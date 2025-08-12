@@ -49,7 +49,7 @@ export function getBotKey(config) {
   const botKey = process.env[config.bot_key_env];
   if (!botKey) {
     logger.error(`Bot key not found in environment variable: ${config.bot_key_env}`);
-    return null;
+    throw new Error(`Missing required environment variable: ${config.bot_key_env}`);
   }
   return botKey;
 }

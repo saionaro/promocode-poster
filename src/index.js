@@ -44,9 +44,7 @@ const configPaths = PARSERS_CONFIG_PATH.split(',').map(path => path.trim());
 for (const configPath of configPaths) {
   const config = await loadConfig(configPath);
   const botKey = getBotKey(config);
-  if (botKey) {
-    await run(config, botKey);
-  }
+  await run(config, botKey);
 }
 
 logger.info("Finished");

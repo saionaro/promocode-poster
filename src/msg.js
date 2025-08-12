@@ -35,11 +35,6 @@ const formatMessage = (promocode) => {
 };
 
 export async function postCodes(codes, gameConfig, botKey) {
-  if (!botKey) {
-    logger.error(`Bot key not found in environment variable: ${gameConfig.bot_key_env}`);
-    return;
-  }
-
   const SIGNATURE = `\n--\n[Redeem a code](${gameConfig.redeem_url})`;
   let message = "";
   for (const code of codes) {
@@ -51,11 +46,6 @@ export async function postCodes(codes, gameConfig, botKey) {
 export async function postNotification(message, botKey) {
   if (!TELEGRAM_CHANNEL_ADMIN_ID)
     return void logger.info(`No TELEGRAM_CHANNEL_ADMIN_ID set`);
-  
-  if (!botKey) {
-    logger.error('No bot key provided for admin notifications');
-    return;
-  }
   
   await postMessage(message, TELEGRAM_CHANNEL_ADMIN_ID, botKey);
 }
