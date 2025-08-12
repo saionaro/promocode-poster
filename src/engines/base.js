@@ -19,7 +19,7 @@ export class BaseEngine {
   }
   static async loadConfig(rawPath) {
     const cfgPath = path2Absolute(rawPath);
-    console.log(`Loading parsers config from: ${cfgPath}`);
+    logger.info(`Loading parsers config from: ${cfgPath}`);
     if (!(await exists(cfgPath))) {
       logger.error(`Parsers config is not found at: ${cfgPath}`);
       process.exit(1);
@@ -55,7 +55,10 @@ export class BaseEngine {
       const [code, ...description] = val.split(this.divider);
       parsed.push({
         code: code.trim().toUpperCase(),
-        description: description.join(this.divider).trim(),
+        description: description
+          .join(this.divider)
+          .replace(/[\(\)]/g, "")
+          .trim(),
         source: this.url,
         sourceName: this.name,
       });

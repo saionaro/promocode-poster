@@ -1,7 +1,7 @@
 {
   "game": "genshin",
   "bot_key_env": "TELEGRAM_BOT_KEY_GENSHIN",
-  "channel_id": "-1001234567890",
+  "channel_id_env": "TELEGRAM_CHANNEL_ID_GENSHIN",
   "redeem_url": "https://genshin.hoyoverse.com/en/gift",
   "db_file": "db_genshin.json",
   "parsers": [

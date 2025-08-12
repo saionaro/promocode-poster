@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { resolve } from "path";
-import { getDirname } from "./util.js";
+import { getDirname } from "./dirname.js";
 
 const __dirname = getDirname(import.meta.url);
 

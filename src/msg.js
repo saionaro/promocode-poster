@@ -1,9 +1,7 @@
 import fetch from "node-fetch";
 import { logger } from "./log.js";
 
-const {
-  TELEGRAM_CHANNEL_ADMIN_ID,
-} = process.env;
+const { TELEGRAM_CHANNEL_ADMIN_ID } = process.env;
 
 async function postMessage(text, targetId, botKey) {
   logger.info(`Sending message to [${targetId}]`);
@@ -12,15 +10,23 @@ async function postMessage(text, targetId, botKey) {
   form.append("text", text);
   form.append("parse_mode", "markdown");
   form.append("disable_web_page_preview", "true");
+
   try {
-    await fetch(`https://api.telegram.org/bot${botKey}/sendMessage`, {
-      method: "POST",
-      body: form,
-    });
+    const res = await fetch(
+      `https://api.telegram.org/bot${botKey}/sendMessage`,
+      {
+        method: "POST",
+        body: form,
+      }
+    );
+
+    if (res.status !== 200)
+      throw new Error(`Telegram API returned status ${res.status}`);
+
     logger.info(`Message to [${targetId}] sent`);
   } catch (e) {
     logger.error(`Message to [${targetId}] is NOT sent`);
-    logger.error(e.response?.data?.description);
+    logger.error(e.message);
   }
 }
 
@@ -34,18 +40,18 @@ const formatMessage = (promocode) => {
   return res;
 };
 
-export async function postCodes(codes, gameConfig, botKey) {
+export async function postCodes(codes, gameConfig, { channelId, botKey }) {
   const signature = `\n--\n[Redeem a code](${gameConfig.redeem_url})`;
   let message = "";
   for (const code of codes) {
     message += `\n${formatMessage(code)}`;
   }
-  await postMessage(`${message}${signature}`, gameConfig.channel_id, botKey);
+  await postMessage(`${message}${signature}`, channelId, botKey);
 }
 
 export async function postNotification(message, botKey) {
   if (!TELEGRAM_CHANNEL_ADMIN_ID)
     return void logger.info(`No TELEGRAM_CHANNEL_ADMIN_ID set`);
-  
+
   await postMessage(message, TELEGRAM_CHANNEL_ADMIN_ID, botKey);
 }

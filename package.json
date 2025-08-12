@@ -23,17 +23,17 @@
   },
   "homepage": "https://github.com/saionaro/promocode-poster#readme",
   "dependencies": {
-    "dotenv": "^17.2.0",
+    "dotenv": "^17.2.1",
     "jsdom": "^26.1.0",
     "node-fetch": "^3.3.2",
-    "pino": "^9.7.0",
-    "pretty-bytes": "^7.0.0"
+    "pino": "^9.8.0",
+    "pretty-bytes": "^7.0.1"
   },
   "engines": {
     "node": ">=24.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",
-    "pino-pretty": "^13.0.0"
+    "pino-pretty": "^13.1.1"
   }
 }

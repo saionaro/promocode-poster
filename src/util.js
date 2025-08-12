@@ -1,7 +1,7 @@
-import { dirname, resolve, join, isAbsolute } from "path";
+import { resolve, join, isAbsolute } from "path";
 import fs from "fs/promises";
-import { fileURLToPath } from "url";
 import { logger } from "./log.js";
+import { getDirname } from "./dirname.js";
 
 export function parseJson(maybeJson) {
   try {
@@ -22,11 +22,6 @@ export function sanitize(val) {
   return res;
 }
 
-export function getDirname(fileUrl) {
-  const __filename = fileURLToPath(fileUrl);
-  return dirname(__filename);
-}
-
 export function path2Absolute(providedPath) {
   let path = providedPath;
   if (!isAbsolute(path)) {
@@ -45,23 +40,27 @@ export async function exists(path) {
   }
 }
 
-export function getBotKey(config) {
-  const botKey = process.env[config.bot_key_env];
-  if (!botKey) {
-    throw new Error(`Missing required environment variable: ${config.bot_key_env}`);
+export function getRequiredEnv(envVar) {
+  const value = process.env[envVar];
+
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${envVar}`);
   }
-  return botKey;
+
+  return value;
 }
 
 export async function processConfigs(callback) {
   const { PARSERS_CONFIG_PATH } = process.env;
   const { loadConfig } = await import("./engines/index.js");
-  
-  const configPaths = PARSERS_CONFIG_PATH.split(',').map(path => path.trim());
-  
+
+  const configPaths = PARSERS_CONFIG_PATH.split(",").map((path) => path.trim());
+
   for (const configPath of configPaths) {
     const config = await loadConfig(configPath);
-    const botKey = getBotKey(config);
-    await callback(config, botKey);
+    await callback(config, {
+      botKey: getRequiredEnv(config.bot_key_env),
+      channelId: getRequiredEnv(config.channel_id_env),
+    });
   }
 }

@@ -1,7 +1,7 @@
 {
   "game": "honkai",
   "bot_key_env": "TELEGRAM_BOT_KEY_HONKAI",
-  "channel_id": "-1001987654321",
+  "channel_id_env": "TELEGRAM_CHANNEL_ID_HONKAI",
   "redeem_url": "https://hsr.hoyoverse.com/gift",
   "db_file": "db_honkai.json",
   "parsers": [
@@ -23,27 +23,6 @@
       "divider": " – ",
       "list_selectors": [
         ".post-31960 ul"
-      ]
-    },
-    {
-      "name": "VG247",
-      "engine": "jsdom",
-      "source_url": "https://www.vg247.com/honkai-star-rail-codes",
-      "root_selector": ".article_body_content",
-      "divider": ": ",
-      "list_selectors": [
-        "#codes + ul",
-        "#codes + p + ul",
-        "#livestream + ul",
-        "#livestream + p + ul",
-        "#livestream-codes + ul",
-        "#livestream-codes + p + ul",
-        "#working + ul",
-        "#working + p + ul",
-        "#live-stream + ul",
-        "#live-stream + p + ul",
-        "#live-stream-codes + ul",
-        "#live-stream-codes + p + ul"
       ]
     }
   ]

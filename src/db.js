@@ -1,8 +1,9 @@
 import fs from "fs/promises";
-import { join, dirname } from "path";
+import { dirname } from "path";
 import { logger } from "./log.js";
 import { path2Absolute, exists } from "./util.js";
 
+const { NODE_ENV } = process.env;
 const ENCODING = "utf-8";
 
 const DEFAULT_STRUCTURE = {
@@ -33,7 +34,7 @@ class Worker {
   }
   has(raw_code) {
     const code = makeupCode(raw_code);
-    return Boolean(this.#content.codes[code] || this.#pendingCodes[code]);
+    return Boolean(this.#content?.codes?.[code] || this.#pendingCodes[code]);
   }
   add(raw_code, description = "") {
     const code = makeupCode(raw_code);
@@ -76,11 +77,14 @@ export class DB {
   }
   async getContent() {
     const content = await fs.readFile(this.#dbPath, ENCODING);
-    return JSON.parse(content);
+    return JSON.parse(content || "{}");
   }
   async #saveContent(data) {
     try {
-      await fs.writeFile(this.#dbPath, JSON.stringify(data, null, 2));
+      await fs.writeFile(
+        this.#dbPath,
+        JSON.stringify(data, null, NODE_ENV === "development" ? 2 : 0)
+      );
       return true;
     } catch (e) {
       logger.error(e);
