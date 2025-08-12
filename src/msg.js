@@ -1,30 +1,32 @@
 import fetch from "node-fetch";
 import { logger } from "./log.js";
 
-const {
-  TELEGRAM_BOT_KEY,
-  TELEGRAM_CHANNEL_ID,
-  TELEGRAM_CHANNEL_ADMIN_ID,
-  REDEEM_URL,
-} = process.env;
-const SIGNATURE = `\n--\n[Redeem a code](${REDEEM_URL})`;
+const { TELEGRAM_CHANNEL_ADMIN_ID } = process.env;
 
-async function postMessage(target_id, text) {
-  logger.info(`Sending message to [${target_id}]`);
+async function postMessage(text, targetId, botKey) {
+  logger.info(`Sending message to [${targetId}]`);
   let form = new FormData();
-  form.append("chat_id", target_id);
+  form.append("chat_id", targetId);
   form.append("text", text);
   form.append("parse_mode", "markdown");
   form.append("disable_web_page_preview", "true");
+
   try {
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_KEY}/sendMessage`, {
-      method: "POST",
-      body: form,
-    });
-    logger.info(`Message to [${target_id}] sent`);
+    const res = await fetch(
+      `https://api.telegram.org/bot${botKey}/sendMessage`,
+      {
+        method: "POST",
+        body: form,
+      }
+    );
+
+    if (res.status !== 200)
+      throw new Error(`Telegram API returned status ${res.status}`);
+
+    logger.info(`Message to [${targetId}] sent`);
   } catch (e) {
-    logger.error(`Message to [${target_id}] is NOT sent`);
-    logger.error(e.response?.data?.description);
+    logger.error(`Message to [${targetId}] is NOT sent`);
+    logger.error(e.message);
   }
 }
 
@@ -38,16 +40,18 @@ const formatMessage = (promocode) => {
   return res;
 };
 
-export async function postCodes(codes) {
+export async function postCodes(codes, gameConfig, { channelId, botKey }) {
+  const signature = `\n--\n[Redeem a code](${gameConfig.redeem_url})`;
   let message = "";
   for (const code of codes) {
     message += `\n${formatMessage(code)}`;
   }
-  await postMessage(TELEGRAM_CHANNEL_ID, `${message}${SIGNATURE}`);
+  await postMessage(`${message}${signature}`, channelId, botKey);
 }
 
-export async function postNotification(message) {
+export async function postNotification(message, botKey) {
   if (!TELEGRAM_CHANNEL_ADMIN_ID)
     return void logger.info(`No TELEGRAM_CHANNEL_ADMIN_ID set`);
-  await postMessage(TELEGRAM_CHANNEL_ADMIN_ID, message);
+
+  await postMessage(message, TELEGRAM_CHANNEL_ADMIN_ID, botKey);
 }

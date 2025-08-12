@@ -1,9 +1,9 @@
 import fs from "fs/promises";
-import { join } from "path";
+import { dirname } from "path";
 import { logger } from "./log.js";
 import { path2Absolute, exists } from "./util.js";
 
-const DB_NAME = "db.json";
+const { NODE_ENV } = process.env;
 const ENCODING = "utf-8";
 
 const DEFAULT_STRUCTURE = {
@@ -11,9 +11,8 @@ const DEFAULT_STRUCTURE = {
   updateTs: 0,
 };
 
-async function createDb(path) {
-  await fs.mkdir(path, { recursive: true });
-  const dbPath = join(path, DB_NAME);
+async function createDb(dbPath) {
+  await fs.mkdir(dirname(dbPath), { recursive: true });
   const draft = {
     ...DEFAULT_STRUCTURE,
   };
@@ -35,7 +34,7 @@ class Worker {
   }
   has(raw_code) {
     const code = makeupCode(raw_code);
-    return Boolean(this.#content.codes[code] || this.#pendingCodes[code]);
+    return Boolean(this.#content?.codes?.[code] || this.#pendingCodes[code]);
   }
   add(raw_code, description = "") {
     const code = makeupCode(raw_code);
@@ -53,19 +52,17 @@ class Worker {
 }
 
 export class DB {
-  #dbDirPath;
   #dbPath;
   #activeWorker = null;
-  constructor(rawPath) {
-    this.#dbDirPath = path2Absolute(rawPath);
-    this.#dbPath = join(this.#dbDirPath, DB_NAME);
+  constructor(dbFilePath) {
+    this.#dbPath = path2Absolute(dbFilePath);
   }
 
   async init() {
     if (!(await exists(this.#dbPath))) {
-      await createDb(this.#dbDirPath);
+      await createDb(this.#dbPath);
     }
-    logger.info("DB inited");
+    logger.info(`DB inited: ${this.#dbPath}`);
   }
   async createWorker() {
     this.#activeWorker = new Worker(this);
@@ -80,11 +77,14 @@ export class DB {
   }
   async getContent() {
     const content = await fs.readFile(this.#dbPath, ENCODING);
-    return JSON.parse(content);
+    return JSON.parse(content || "{}");
   }
   async #saveContent(data) {
     try {
-      await fs.writeFile(this.#dbPath, JSON.stringify(data, null, 2));
+      await fs.writeFile(
+        this.#dbPath,
+        JSON.stringify(data, null, NODE_ENV === "development" ? 2 : 0)
+      );
       return true;
     } catch (e) {
       logger.error(e);

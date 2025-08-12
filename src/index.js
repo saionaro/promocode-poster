@@ -1,21 +1,25 @@
 import "./config.js";
+import { join } from "path";
+import { pathToFileURL } from "url";
 import { postCodes } from "./msg.js";
 import { DB } from "./db.js";
 import { logger } from "./log.js";
 import { searchCodes } from "./finder.js";
-import engines, { loadConfig } from "./engines/index.js";
+import engines from "./engines/index.js";
+import { processConfigs } from "./util.js";
 
-const { DB_DIR, NODE_ENV, TELEGRAM_CHANNEL_ID, PARSERS_CONFIG_PATH } =
-  process.env;
+const { DB_DIR, NODE_ENV } = process.env;
 
-export async function run() {
-  logger.info("Started");
-  logger.info(`NODE_ENV: ${NODE_ENV}`);
-  logger.info(`TELEGRAM_CHANNEL_ID: ${TELEGRAM_CHANNEL_ID}`);
-  const db = new DB(DB_DIR);
+export async function run(gameConfig, { botKey, channelId }) {
+  logger.info(
+    `Processing ${gameConfig.game} with ${gameConfig.parsers.length} parsers`
+  );
+
+  const dbFilePath = join(DB_DIR, gameConfig.db_file);
+  const db = new DB(dbFilePath);
   await db.init();
-  const parsersConfig = await loadConfig(PARSERS_CONFIG_PATH);
-  const parsers = parsersConfig.map((cfg) => {
+
+  const parsers = gameConfig.parsers.map((cfg) => {
     const Engine = engines[cfg.engine] ?? engines.jsdom;
     return new Engine(cfg);
   });
@@ -23,10 +27,21 @@ export async function run() {
   const newCodes = await searchCodes(db, parsers);
 
   if (newCodes.length) {
-    await postCodes(newCodes);
+    logger.info(`Found ${newCodes.length} new codes for ${gameConfig.game}`);
+    await postCodes(newCodes, gameConfig, { botKey, channelId });
+  } else {
+    logger.info(`No new codes found for ${gameConfig.game}`);
   }
+}
+
+const isMain =
+  !!process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href; // bleat
+
+if (isMain) {
+  logger.info("Started");
+  logger.info(`NODE_ENV: ${NODE_ENV}`);
+
+  await processConfigs(run);
 
   logger.info("Finished");
 }
-
-await run();

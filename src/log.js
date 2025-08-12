@@ -3,7 +3,7 @@ import pino from "pino";
 const { NODE_ENV } = process.env;
 
 const settings = {
-  msgPrefix: `[env:${NODE_ENV}] `,
+  msgPrefix: `[env:${NODE_ENV == "development" ? "dev" : "prod"}] `,
 };
 
 if (NODE_ENV === "development") {

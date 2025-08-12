@@ -1,43 +1,29 @@
-[
-  {
-    "name": "GameRant",
-    "engine": "jsdom",
-    "source_url": "https://gamerant.com/honkai-star-rail-hsr-redeem-code-livestream-codes-free-stellar-jade/",
-    "root_selector": ".article-body",
-    "divider": " (",
-    "list_selectors": [
-      ".content-block-regular ul"
-    ]
-  },
-  {
-    "name": "PocketTactics",
-    "engine": "jsdom",
-    "source_url": "https://www.pockettactics.com/honkai-star-rail/codes",
-    "root_selector": ".category-honkai-star-rail",
-    "divider": " – ",
-    "list_selectors": [
-      ".post-31960 ul"
-    ]
-  },
-  {
-    "name": "VG247",
-    "engine": "jsdom",
-    "source_url": "https://www.vg247.com/honkai-star-rail-codes",
-    "root_selector": ".article_body_content",
-    "divider": ": ",
-    "list_selectors": [
-      "#codes + ul",
-      "#codes + p + ul",
-      "#livestream + ul",
-      "#livestream + p + ul",
-      "#livestream-codes + ul",
-      "#livestream-codes + p + ul",
-      "#working + ul",
-      "#working + p + ul",
-      "#live-stream + ul",
-      "#live-stream + p + ul",
-      "#live-stream-codes + ul",
-      "#live-stream-codes + p + ul"
-    ]
-  }
-]
+{
+  "game": "honkai",
+  "bot_key_env": "TELEGRAM_BOT_KEY_HONKAI",
+  "channel_id_env": "TELEGRAM_CHANNEL_ID_HONKAI",
+  "redeem_url": "https://hsr.hoyoverse.com/gift",
+  "db_file": "db_honkai.json",
+  "parsers": [
+    {
+      "name": "GameRant",
+      "engine": "jsdom",
+      "source_url": "https://gamerant.com/honkai-star-rail-hsr-redeem-code-livestream-codes-free-stellar-jade/",
+      "root_selector": ".article-body",
+      "divider": " (",
+      "list_selectors": [
+        ".content-block-regular ul"
+      ]
+    },
+    {
+      "name": "PocketTactics",
+      "engine": "jsdom",
+      "source_url": "https://www.pockettactics.com/honkai-star-rail/codes",
+      "root_selector": ".category-honkai-star-rail",
+      "divider": " – ",
+      "list_selectors": [
+        ".post-31960 ul"
+      ]
+    }
+  ]
+}
