@@ -5,7 +5,7 @@ const {
   TELEGRAM_CHANNEL_ADMIN_ID,
 } = process.env;
 
-export async function postMessage(text, targetId, botKey) {
+async function postMessage(text, targetId, botKey) {
   logger.info(`Sending message to [${targetId}]`);
   let form = new FormData();
   form.append("chat_id", targetId);

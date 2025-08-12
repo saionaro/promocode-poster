@@ -28,7 +28,6 @@ export class BaseEngine {
     try {
       const content = await fs.readFile(cfgPath, "utf-8");
       const config = JSON.parse(content);
-      
       return config;
     } catch (error) {
       logger.error(error);

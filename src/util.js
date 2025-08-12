@@ -48,8 +48,20 @@ export async function exists(path) {
 export function getBotKey(config) {
   const botKey = process.env[config.bot_key_env];
   if (!botKey) {
-    logger.error(`Bot key not found in environment variable: ${config.bot_key_env}`);
     throw new Error(`Missing required environment variable: ${config.bot_key_env}`);
   }
   return botKey;
+}
+
+export async function processConfigs(callback) {
+  const { PARSERS_CONFIG_PATH } = process.env;
+  const { loadConfig } = await import("./engines/index.js");
+  
+  const configPaths = PARSERS_CONFIG_PATH.split(',').map(path => path.trim());
+  
+  for (const configPath of configPaths) {
+    const config = await loadConfig(configPath);
+    const botKey = getBotKey(config);
+    await callback(config, botKey);
+  }
 }
