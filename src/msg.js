@@ -35,12 +35,12 @@ const formatMessage = (promocode) => {
 };
 
 export async function postCodes(codes, gameConfig, botKey) {
-  const SIGNATURE = `\n--\n[Redeem a code](${gameConfig.redeem_url})`;
+  const signature = `\n--\n[Redeem a code](${gameConfig.redeem_url})`;
   let message = "";
   for (const code of codes) {
     message += `\n${formatMessage(code)}`;
   }
-  await postMessage(`${message}${SIGNATURE}`, gameConfig.channel_id, botKey);
+  await postMessage(`${message}${signature}`, gameConfig.channel_id, botKey);
 }
 
 export async function postNotification(message, botKey) {

@@ -3,7 +3,7 @@ import { postNotification } from "./msg.js";
 import { logger } from "./log.js";
 import { processConfigs } from "./util.js";
 
-const { NODE_ENV, TELEGRAM_CHANNEL_ADMIN_ID } = process.env;
+const { NODE_ENV } = process.env;
 
 logger.info("Cron task set up completed");
 
@@ -22,7 +22,5 @@ await processConfigs(async (config, botKey) => {
 if (NODE_ENV === "development") {
   const { run } = await import("./index.js");
   
-  await processConfigs(async (config, botKey) => {
-    await run(config, botKey);
-  });
+  await processConfigs(run);
 }

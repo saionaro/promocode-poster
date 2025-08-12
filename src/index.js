@@ -1,10 +1,10 @@
+import { join } from "path";
 import "./config.js";
 import { postCodes } from "./msg.js";
 import { DB } from "./db.js";
 import { logger } from "./log.js";
 import { searchCodes } from "./finder.js";
 import engines from "./engines/index.js";
-import { join } from "path";
 import { processConfigs } from "./util.js";
 
 const { DB_DIR, NODE_ENV } = process.env;
@@ -34,8 +34,6 @@ export async function run(gameConfig, botKey) {
 logger.info("Started");
 logger.info(`NODE_ENV: ${NODE_ENV}`);
 
-await processConfigs(async (config, botKey) => {
-  await run(config, botKey);
-});
+await processConfigs(run);
 
 logger.info("Finished");
