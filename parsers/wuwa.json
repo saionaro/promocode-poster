@@ -24,6 +24,39 @@
       "list_selectors": [
         "ul.copyable"
       ]
+    },
+    {
+      "name": "Eurogamer",
+      "engine": "jsdom",
+      "source_url": "https://www.eurogamer.net/wuthering-waves-codes-how-to-redeem-livestream-9436",
+      "root_selector": ".article_body_content",
+      "divider": " - ",
+      "list_selectors": [
+        "ul.copyable"
+      ]
+    },
+    {
+      "name": "PCGamesN",
+      "engine": "jsdom",
+      "source_url": "https://www.pcgamesn.com/wuthering-waves/codes",
+      "root_selector": ".entry-content",
+      "divider": " - ",
+      "list_selectors": [
+        ".entry-content ul"
+      ]
+    },
+    {
+      "name": "GameRant",
+      "engine": "jsdom",
+      "extract": "table",
+      "source_url": "https://gamerant.com/wuthering-waves-codes-redeem-free-rewards/",
+      "root_selector": ".article-body",
+      "list_selectors": [
+        ".article-body table"
+      ],
+      "table_limit": 1,
+      "code_column": 0,
+      "description_column": 1
     }
   ]
 }

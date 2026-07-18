@@ -1,0 +1,22 @@
+{
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noUselessThisAlias": "off"
+      }
+    }
+  },
+  "formatter": {
+    "indentStyle": "space"
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
+  },
+  "files": {
+    "includes": ["**", "!**/node_modules/*"]
+  }
+}

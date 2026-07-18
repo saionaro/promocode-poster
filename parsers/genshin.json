@@ -39,6 +39,36 @@
         "#livestream-codes + ul",
         "#livestream-codes + p + ul"
       ]
+    },
+    {
+      "name": "Eurogamer",
+      "engine": "jsdom",
+      "source_url": "https://www.eurogamer.net/genshin-impact-codes-livestream-active-working-how-to-redeem-9026",
+      "root_selector": ".article_body_content",
+      "divider": " - ",
+      "list_selectors": [
+        "ul.copyable"
+      ]
+    },
+    {
+      "name": "PCGamesN",
+      "engine": "jsdom",
+      "source_url": "https://www.pcgamesn.com/genshin-impact/codes-redeem-promo",
+      "root_selector": ".entry-content",
+      "divider": " - ",
+      "list_selectors": [
+        ".entry-content ul"
+      ]
+    },
+    {
+      "name": "RockPaperShotgun",
+      "engine": "jsdom",
+      "source_url": "https://www.rockpapershotgun.com/genshin-impact-codes-list",
+      "root_selector": ".article_body_content",
+      "divider": ": ",
+      "list_selectors": [
+        "ul.copyable"
+      ]
     }
   ]
 }

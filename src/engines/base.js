@@ -14,6 +14,12 @@ export class BaseEngine {
     this.rootSelector = meta.root_selector;
     this.listSelectors = meta.list_selectors;
     this.divider = meta.divider;
+    this.extract = meta.extract || "list";
+    this.codeColumn = meta.code_column ?? 0;
+    this.descriptionColumn = meta.description_column ?? 1;
+    this.statusColumn = meta.status_column;
+    this.statusInclude = meta.status_include || null;
+    this.tableLimit = meta.table_limit ?? null;
     this.browser = null;
     this.bytesTransferred = 0;
   }
@@ -39,7 +45,7 @@ export class BaseEngine {
   }
   async destroy() {
     logger.info(
-      `Network usage [${prettyBytes(this.bytesTransferred)}] by ${this.name}`
+      `Network usage [${prettyBytes(this.bytesTransferred)}] by ${this.name}`,
     );
   }
   async getPage() {
@@ -64,6 +70,36 @@ export class BaseEngine {
       });
     }
     return parsed;
+  }
+  parseTable(rows) {
+    const parsed = [];
+    for (const cells of rows) {
+      const rawCode = cells[this.codeColumn] ?? "";
+      const rawDescription = cells[this.descriptionColumn] ?? "";
+      // Strip trailing notes like "WUWA4PC (PC only)" → "WUWA4PC"
+      const code = sanitize(rawCode)
+        .replace(/\s*\([^)]*\)\s*$/g, "")
+        .trim()
+        .toUpperCase();
+      const description = sanitize(rawDescription)
+        .replace(/[\(\)]/g, "")
+        .trim();
+      parsed.push({
+        code,
+        description,
+        source: this.url,
+        sourceName: this.name,
+      });
+    }
+    return parsed;
+  }
+  statusAllowed(statusText) {
+    if (!this.statusInclude || !this.statusInclude.length) return true;
+
+    const status = (statusText || "").toLowerCase();
+    return this.statusInclude.some((token) =>
+      status.includes(String(token).toLowerCase()),
+    );
   }
   filter(rawList) {
     return rawList.filter((codeRecord) => {

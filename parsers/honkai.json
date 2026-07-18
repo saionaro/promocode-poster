@@ -24,6 +24,43 @@
       "list_selectors": [
         ".post-31960 ul"
       ]
+    },
+    {
+      "name": "Eurogamer",
+      "engine": "jsdom",
+      "source_url": "https://www.eurogamer.net/honkai-star-rail-codes-livestream-active-working-how-to-redeem-9321",
+      "root_selector": ".article_body_content",
+      "divider": ": ",
+      "list_selectors": [
+        "ul.copyable"
+      ]
+    },
+    {
+      "name": "PCGamesN",
+      "engine": "jsdom",
+      "source_url": "https://www.pcgamesn.com/honkai-star-rail/codes",
+      "root_selector": ".entry-content",
+      "divider": " - ",
+      "list_selectors": [
+        ".entry-content ul"
+      ]
+    },
+    {
+      "name": "RockPaperShotgun",
+      "engine": "jsdom",
+      "extract": "table",
+      "source_url": "https://www.rockpapershotgun.com/honkai-star-rail-codes-list",
+      "root_selector": ".article_body_content",
+      "list_selectors": [
+        ".article_body_content table"
+      ],
+      "code_column": 0,
+      "description_column": 1,
+      "status_column": 2,
+      "status_include": [
+        "new",
+        "active"
+      ]
     }
   ]
 }

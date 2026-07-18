@@ -1,0 +1,17 @@
+{
+  "game": "testgame",
+  "bot_key_env": "TEST_BOT_KEY",
+  "channel_id_env": "TEST_CHANNEL_ID",
+  "redeem_url": "https://example.com/redeem",
+  "db_file": "db_test.json",
+  "parsers": [
+    {
+      "name": "TestSource",
+      "engine": "jsdom",
+      "source_url": "https://example.com/codes",
+      "root_selector": ".body",
+      "divider": " - ",
+      "list_selectors": [".codes ul"]
+    }
+  ]
+}
