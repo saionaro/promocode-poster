@@ -24,11 +24,13 @@ The application supports running multiple parser configurations in a single exec
 # Single configuration (backward compatible)
 PARSERS_CONFIG_PATH=./parsers/genshin.json
 
-# Multiple configurations (run both in one execution)
-PARSERS_CONFIG_PATH=./parsers/genshin.json,./parsers/honkai.json
+# Multiple configurations (run several in one execution)
+PARSERS_CONFIG_PATH=./parsers/genshin.json,./parsers/honkai.json,./parsers/wuwa.json
 ```
 
 This allows you to monitor multiple games/sources with a single cron job instead of requiring separate app instances.
+
+Available configs: `genshin.json` (Genshin Impact), `honkai.json` (Honkai: Star Rail), `wuwa.json` (Wuthering Waves).
 
 ### Run a development server locally
 
@@ -49,5 +51,6 @@ There is a docker container with cronjob task prepared. All you need to do:
 
 ## Promocode Poster-powered channels
 
+- [Wuthering Waves - Promo Codes](https://t.me/wuwa_codes)
 - [Genshin Impact Codes](https://t.me/genshinimpact_codes)
 - [Star Rail Codes](https://t.me/star_rail_codes)

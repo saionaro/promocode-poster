@@ -1,0 +1,29 @@
+{
+  "game": "wuwa",
+  "bot_key_env": "TELEGRAM_BOT_KEY_WUWA",
+  "channel_id_env": "TELEGRAM_CHANNEL_ID_WUWA",
+  "redeem_url": "https://wutheringwaves.kurogames.com/en/main",
+  "db_file": "db_wuwa.json",
+  "parsers": [
+    {
+      "name": "PocketTactics",
+      "engine": "jsdom",
+      "source_url": "https://www.pockettactics.com/wuthering-waves/codes",
+      "root_selector": ".category-wuthering-waves",
+      "divider": " - ",
+      "list_selectors": [
+        ".post-79711 ul"
+      ]
+    },
+    {
+      "name": "VG247",
+      "engine": "jsdom",
+      "source_url": "https://www.vg247.com/wuthering-waves-codes-redeem",
+      "root_selector": ".article_body_content",
+      "divider": ": ",
+      "list_selectors": [
+        "ul.copyable"
+      ]
+    }
+  ]
+}
