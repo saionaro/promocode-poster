@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     init: true
     mem_limit: 384m
-    mem_swap_limit: 384m
+    memswap_limit: 384m
     logging:
       driver: json-file
       options:
